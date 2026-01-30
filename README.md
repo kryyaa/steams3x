@@ -2,7 +2,7 @@
 
 # steams3x
 
-**Modern Steam games installer and manager**
+**Fast Steam games installer and manager**
 
 Alternative to Steam Tools and etc.
 
