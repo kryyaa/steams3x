@@ -2,7 +2,7 @@
 
 # steams3x
 
-**Modern Steam games installer and manager**
+**Fast Steam games installer and manager**
 
 Alternative to Steam Tools and etc.
 
@@ -58,10 +58,6 @@ Click "Repair" to backup, clean, and restore cracks
 - Windows 7+
 - Steam installed
 - .NET Framework 4.7.2+
-
-## Tested on
-- Windows 11
-- Steam client x64 / x86
 
 ---
 
