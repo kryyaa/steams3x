@@ -306,11 +306,24 @@ namespace steamsex
                 return;
             }
 
-            string steamPath = FindSteamPath();
-            if (string.IsNullOrEmpty(steamPath))
+            string steamPath = null;
+
+            if (AutoDetectSteam.Checked)
             {
-                MessageBox.Show("steam не найден!");
-                return;
+                steamPath = FindSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    MessageBox.Show("steam не найден автоматически! Попробуйте выбрать папку вручную.", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                steamPath = SelectSteamFolder();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    return;
+                }
             }
 
             string stpluginPath = GetStpluginPath(steamPath);
@@ -320,7 +333,9 @@ namespace steamsex
                 return;
             }
 
-            Directory.CreateDirectory(stpluginPath);
+            if (!Directory.Exists(stpluginPath))
+                Directory.CreateDirectory(stpluginPath);
+
             string depotCachePath = GetDepotCachePath(steamPath);
             if (!Directory.Exists(depotCachePath))
                 Directory.CreateDirectory(depotCachePath);
@@ -334,6 +349,36 @@ namespace steamsex
             {
                 client.Encoding = Encoding.UTF8;
                 client.Headers["User-Agent"] = "Mozilla/5.0";
+
+                try
+                {
+                    string[] dllUrls = new string[]
+                    {
+                "https://github.com/kryyaa/steams3x/releases/download/repair/xinput1_4.dll",
+                "https://github.com/kryyaa/steams3x/releases/download/repair/python311.dll",
+                "https://github.com/kryyaa/steams3x/releases/download/repair/millennium.dll"
+                    };
+
+                    foreach (string dllUrl in dllUrls)
+                    {
+                        try
+                        {
+                            string fileName = Path.GetFileName(new Uri(dllUrl).LocalPath);
+                            string dllPath = Path.Combine(steamPath, fileName);
+
+                            client.DownloadFile(dllUrl, dllPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"не удалось загрузить {Path.GetFileName(new Uri(dllUrl).LocalPath)}: {ex.Message}",
+                                "предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"ошибка при загрузке DLL: {ex.Message}", "предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
 
                 int successCount = 0;
                 int failCount = 0;
@@ -378,7 +423,7 @@ namespace steamsex
                 }
 
                 RestartSteam(steamPath);
-                MessageBox.Show($"установка завершена!\nуспешно: {successCount}\nне удалось: {failCount}\nsteam перезапущен.");
+                MessageBox.Show($"установка завершена!\nуспешно: {successCount}\nне удалось: {failCount}\nDLL файлы загружены\nsteam перезапущен.");
             }
         }
 
@@ -392,11 +437,24 @@ namespace steamsex
                 return;
             }
 
-            string steamPath = FindSteamPath();
-            if (string.IsNullOrEmpty(steamPath))
+            string steamPath = null;
+
+            if (AutoDetectSteam.Checked)
             {
-                MessageBox.Show("steam не найден!", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                steamPath = FindSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    MessageBox.Show("steam не найден автоматически! Попробуйте выбрать папку вручную.", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                steamPath = SelectSteamFolder();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    return;
+                }
             }
 
             string stpluginPath = GetStpluginPath(steamPath);
@@ -475,11 +533,24 @@ namespace steamsex
 
         private void repairButton_Click(object sender, EventArgs e)
         {
-            string steamPath = FindSteamPath();
-            if (string.IsNullOrEmpty(steamPath))
+            string steamPath = null;
+
+            if (AutoDetectSteam.Checked)
             {
-                MessageBox.Show("steam не найден!", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                steamPath = FindSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    MessageBox.Show("steam не найден автоматически! Попробуйте выбрать папку вручную.", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                steamPath = SelectSteamFolder();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    return;
+                }
             }
 
             string stpluginPath = GetStpluginPath(steamPath);
@@ -570,6 +641,22 @@ namespace steamsex
                     }
                 }
 
+                try
+                {
+                    string dllUrl = "https://github.com/kryyaa/steams3x/releases/download/repair/xinput1_4.dll";
+                    string dllPath = Path.Combine(steamPath, "xinput1_4.dll");
+
+                    using (WebClient webClient = new WebClient())
+                    {
+                        webClient.Headers["User-Agent"] = "Mozilla/5.0";
+                        webClient.DownloadFile(dllUrl, dllPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"не удалось загрузить xinput1_4.dll: {ex.Message}", "предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
                 if (RestartSteam(steamPath))
                 {
                     Thread.Sleep(25000);
@@ -610,7 +697,7 @@ namespace steamsex
                     }
 
                     RestartSteam(steamPath);
-                    MessageBox.Show($"восстановлено {restoredLuaCount} lua файлов и {restoredManifestCount} манифестов", "готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"восстановлено {restoredLuaCount} lua файлов и {restoredManifestCount} манифестов\nxinput1_4.dll загружена успешно", "готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -627,6 +714,33 @@ namespace steamsex
                         Directory.Delete(tempManifestsDir, true);
                 }
                 catch { }
+            }
+        }
+
+        private string SelectSteamFolder()
+        {
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            {
+                folderDialog.Description = "Выберите папку установки Steam";
+                folderDialog.ShowNewFolderButton = false;
+
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedPath = folderDialog.SelectedPath;
+                    string steamExe = Path.Combine(selectedPath, "steam.exe");
+
+                    if (File.Exists(steamExe))
+                    {
+                        return selectedPath;
+                    }
+                    else
+                    {
+                        MessageBox.Show("В выбранной папке не найден steam.exe!", "ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
+                }
+
+                return null;
             }
         }
 

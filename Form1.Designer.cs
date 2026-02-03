@@ -38,6 +38,7 @@
             this.repairButton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.AutoDetectSteam = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -86,11 +87,12 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.AutoDetectSteam);
             this.groupBox2.Controls.Add(this.openTgChannelButton);
             this.groupBox2.Controls.Add(this.repairButton);
             this.groupBox2.Location = new System.Drawing.Point(12, 147);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 125);
+            this.groupBox2.Size = new System.Drawing.Size(345, 125);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "[misc]";
@@ -118,9 +120,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Location = new System.Drawing.Point(218, 147);
+            this.groupBox3.Location = new System.Drawing.Point(363, 147);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(676, 125);
+            this.groupBox3.Size = new System.Drawing.Size(531, 125);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "[about]";
@@ -128,11 +130,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(341, 51);
+            this.label1.Location = new System.Drawing.Point(105, 61);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(191, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "информативный about текст";
+            // 
+            // AutoDetectSteam
+            // 
+            this.AutoDetectSteam.AutoSize = true;
+            this.AutoDetectSteam.Location = new System.Drawing.Point(197, 87);
+            this.AutoDetectSteam.Name = "AutoDetectSteam";
+            this.AutoDetectSteam.Size = new System.Drawing.Size(138, 20);
+            this.AutoDetectSteam.TabIndex = 3;
+            this.AutoDetectSteam.Text = "Auto Detect steam";
+            this.AutoDetectSteam.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -148,6 +160,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -165,6 +178,7 @@
         private System.Windows.Forms.Button openTgChannelButton;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox AutoDetectSteam;
     }
 }
 
